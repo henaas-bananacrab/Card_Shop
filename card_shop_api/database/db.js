@@ -1,6 +1,6 @@
 const mysql = require('mysql2/promise');
 
-
+// Customer functions
 async function fetchCustomers() {
     try {
         const connection = await mysql.createConnection({
@@ -94,4 +94,38 @@ async function updateCustomer(Customer_id, First_name, Last_name, Email, passwor
         console.error('Error connecting to database:', error);
     }
 }
-module.exports = {fetchCustomers, fetchSingleCustomer, addCustomer, updateCustomer};
+
+async function deleteCustomer(Customer_id) {
+    try {
+        const connecting = await mysql.createConnection({
+            host: 'localhost',
+            user: 'root',
+            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
+            database: 'card_shop_db'
+        });
+        console.log('Connected to database');
+
+        // Execute query to delete a customer
+        const [result] = await connecting.execute(
+            'DELETE FROM `customer` WHERE Customer_id = ?',
+            [Customer_id]
+        );
+
+        // Close connection
+        await connecting.end();
+
+        return result;
+    } catch (error) {
+        console.error('Error connecting to database:', error);
+    }
+}
+
+
+
+module.exports = {
+    fetchCustomers,
+    fetchSingleCustomer,
+    addCustomer,
+    updateCustomer,
+    deleteCustomer
+}
