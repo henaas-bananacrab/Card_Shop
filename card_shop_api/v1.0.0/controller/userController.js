@@ -1,4 +1,4 @@
-const { fetchCustomers, fetchSingleCustomer, addCustomer, updateCustomer, deleteCustomer } = require('../database/db');
+const { fetchCustomers, fetchSingleCustomer, addCustomer, updateCustomer, deleteCustomer } = require('../v1.0.0/database/db');
 
 async function customerMain() {
     const newCustomer = await addCustomer("Alice", "Smith", "alice.smith@email.com", null, "User", 5);
