@@ -120,12 +120,138 @@ async function deleteCustomer(Customer_id) {
     }
 }
 
+// Card functions
+async function fetchCards() {
+    try {
+        const connecting = await mysql.createConnection({
+            host: 'localhost',
+            user: 'root',
+            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
+            database: 'card_shop_db'
+        })
+        console.log('Connected to database');
 
+        // Execute query to fetch all cards
+        const [result] = await connecting.execute('SELECT * FROM `card`');
+
+        // Close connection
+        await connecting.end();
+
+        return result;
+    } catch (error) {
+        console.error('Error connecting to database:', error);
+    }
+}
+
+async function fetchSingleCard(Name) {
+    try {
+        const connecting = await mysql.createConnection({
+            host: 'localhost',
+            user: 'root',
+            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
+            database: 'card_shop_db'
+        })
+        console.log('Connected to database');
+
+        // Execute query to fetch a single card by name, including the Rarity_name and the Type_name
+        const [result] = await connecting.execute(
+            'SELECT c.*, r.Rarity_name, t.Type_name FROM `card` c JOIN `rarity` r ON c.Rarity_Rarity_id = r.Rarity_id JOIN `type` t ON c.Type_Type_id = t.Type_id WHERE c.Name = ?',
+            [Name]
+        );
+
+        // Close connection
+        await connecting.end();
+
+        return result;
+    } catch (error) {
+        console.error('Error connecting to database:', error);
+    }
+}
+
+async function addCard(Name, Quantity, Price, Type_Type_id, Rarity_Rarity_id) {
+    try {
+        const connecting = await mysql.createConnection({
+            host: 'localhost',
+            user: 'root',
+            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
+            database: 'card_shop_db'
+        });
+        console.log('Connected to database');
+
+        // Execute query to insert a new card
+        const [result] = await connecting.execute(
+            'INSERT INTO `card` (Card_id, Name, Quantity, Price, Type_Type_id, Rarity_Rarity_id) VALUES (?, ?, ?, ?, ?, ?)',
+            [null, Name, Quantity, Price, Type_Type_id, Rarity_Rarity_id]
+        );
+
+        // Close Connection
+        await connecting.end();
+
+        return result;
+    } catch (error) {
+        console.error('Error connecting to database:', error);
+    }
+}
+
+async function updateCard(Card_id, Name, Quantity, Price, Type_Type_id, Rarity_Rarity_id) {
+    try {
+        const connecting = await mysql.createConnection({
+            host: 'localhost',
+            user: 'root',
+            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
+            database: 'card_shop_db'
+        });
+        console.log('Connected to database');
+
+        // Execute query to update an existing card
+        const [result] = await connecting.execute(
+            'UPDATE `card` SET Name = ?, Quantity = ?, Price = ?, Type_Type_id = ?, Rarity_Rarity_id = ? WHERE Card_id = ?',
+            [Name, Quantity, Price, Type_Type_id, Rarity_Rarity_id, Card_id]
+        );
+
+        // Close connection
+        await connecting.end();
+
+        return result;
+    } catch (error) {
+        console.error('Error connecting to database:', error);
+    }
+}
+
+async function deleteCard(Card_id) {
+    try {
+        const connecting = await mysql.createConnection({
+            host: 'localhost',
+            user: 'root',
+            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
+            database: 'card_shop_db'
+        });
+        console.log('Connected to database');
+
+        // Execute query to delete a card
+        const [result] = await connecting.execute(
+            'DELETE FROM `card` WHERE Card_id = ?',
+            [Card_id]
+        );
+        
+        // Close connection
+        await connecting.end();
+
+        return result;
+    } catch (error) {
+        console.error('Error connecting to database:', error);
+    }
+}
 
 module.exports = {
     fetchCustomers,
     fetchSingleCustomer,
     addCustomer,
     updateCustomer,
-    deleteCustomer
+    deleteCustomer,
+    fetchCards,
+    fetchSingleCard,
+    addCard,
+    updateCard,
+    deleteCard
 }
