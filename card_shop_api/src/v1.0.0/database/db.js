@@ -36,10 +36,16 @@ async function fetchSingleCustomer(Username) {
         // Execute query to fetch a single customer by username
         const [result] = await connection.execute('SELECT * FROM `customer` WHERE Username = ?', [Username]);
 
+        // Execute query to fetch the address of the customer
+        const [addressResult] = await connection.execute(
+            'SELECT a.* FROM `address` a JOIN `customer` c ON a.Address_id = c.Address_Address_id WHERE c.Username = ?',
+            [Username]
+        );
+
         // Close connection
         await connection.end();
 
-        return result;
+        return { customer: result, address: addressResult };
     } catch (error) {
         console.error('Error connecting to database:', error);
     }
@@ -55,14 +61,16 @@ async function addCustomer(Username, First_name, Last_name, Email, password, Rol
         });
         console.log('Connected to database');
         
-        const [result2] = await connecting.execute(
+        // Execute query to insert a new address
+        const [addressResult] = await connecting.execute(
             'INSERT INTO `address` (Address_id, Street_Address, Postal_code) VALUES (?, ?, ?)',
             [null, Street_Address, Postal_code]
         );
 
-        const addressId = result2.insertId;
+        // Get the inserted address ID
+        const addressId = addressResult.insertId;
 
-        // Execute query to insert a new customer
+        // Execute query to insert a new customer with the address ID
         const [result] = await connecting.execute(
             'INSERT INTO `customer` (Customer_id, Username, First_name, Last_name, Email, password, Roles, Address_Address_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
             [null, Username, First_name, Last_name, Email, password, Roles, addressId]
