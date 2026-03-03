@@ -23,7 +23,7 @@ async function fetchCustomers() {
     }
 }
 
-async function fetchSingleCustomer(First_name) {
+async function fetchSingleCustomer(Username) {
     try {
         const connection = await mysql.createConnection({
             host: 'localhost',
@@ -33,8 +33,8 @@ async function fetchSingleCustomer(First_name) {
         });
         console.log('Connected to database');
 
-        // Execute query to fetch a single customer by first name
-        const [result] = await connection.execute('SELECT * FROM `customer` WHERE First_name = ?', [First_name]);
+        // Execute query to fetch a single customer by username
+        const [result] = await connection.execute('SELECT * FROM `customer` WHERE Username = ?', [Username]);
 
         // Close connection
         await connection.end();
@@ -45,7 +45,7 @@ async function fetchSingleCustomer(First_name) {
     }
 }
 
-async function addCustomer(Username, First_name, Last_name, Email, password, Roles, Address_Address_id) {
+async function addCustomer(Username, First_name, Last_name, Email, password, Roles, Street_Address, Postal_code) {
     try {
         const connecting = await mysql.createConnection({
             host: 'localhost',
@@ -55,16 +55,23 @@ async function addCustomer(Username, First_name, Last_name, Email, password, Rol
         });
         console.log('Connected to database');
         
+        const [result2] = await connecting.execute(
+            'INSERT INTO `address` (Address_id, Street_Address, Postal_code) VALUES (?, ?, ?)',
+            [null, Street_Address, Postal_code]
+        );
+
+        const addressId = result2.insertId;
+
         // Execute query to insert a new customer
         const [result] = await connecting.execute(
-            'INSERT INTO `customer` (Customer_id, Username, First_name, Last_name, Email, password, Roles, Address_Address_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [null, Username, First_name, Last_name, Email, password, Roles, Address_Address_id]
+            'INSERT INTO `customer` (Customer_id, Username, First_name, Last_name, Email, password, Roles, Address_Address_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [null, Username, First_name, Last_name, Email, password, Roles, addressId]
         );
 
         // Close connection
         await connecting.end();
 
-        return result;
+        return result, result2;
     } catch (error) {
         console.error('Error connecting to database:', error);
     }
@@ -265,31 +272,6 @@ async function fetchAddresses() {
         console.error('Error connecting to database:', error);
     }
 }
-
-async function addAddress(Street_Address, Postal_code) {
-    try {
-        const connecting = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
-            database: 'card_shop_db'
-        });
-        console.log('Connected to database');
-        
-        // Execute query to insert a new address
-        const [result] = await connecting.execute(
-            'INSERT INTO `address` (Address_id, Street_Address, Postal_code) VALUES (?, ?, ?)',
-            [null, Street_Address, Postal_code]
-        );
-
-        // Close connection
-        await connecting.end();
-
-        return result;
-    } catch (error) {
-        console.error('Error connecting to database:', error);
-    }
-}
 module.exports = {
     fetchCustomers,
     fetchSingleCustomer,
@@ -302,5 +284,4 @@ module.exports = {
     updateCard,
     deleteCard,
     fetchAddresses,
-    addAddress
 }
