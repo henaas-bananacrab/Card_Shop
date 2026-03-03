@@ -158,6 +158,31 @@ async function fetchCards() {
     }
 }
 
+async function fetchCardsByType(Type_id) {
+    try {
+        const connecting = await mysql.createConnection({
+            host: 'localhost',
+            user: 'root',
+            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
+            database: 'card_shop_db'
+        })
+        console.log('Connected to database');
+
+        // Execute query to fetch all cards with the same type
+        const [result] = await connecting.execute(
+            'SELECT c.*, r.Rarity_name, t.Type_name FROM `card` c JOIN `rarity` r ON c.Rarity_Rarity_id = r.Rarity_id JOIN `type` t ON c.Type_Type_id = t.Type_id WHERE c.Type_Type_id = ?',
+            [Type_id]
+        );
+
+        // Close connection
+        await connecting.end();
+
+        return result;
+    } catch (error) {
+        console.error('Error connecting to database:', error);
+    }
+}
+
 async function fetchSingleCard(Name) {
     try {
         const connecting = await mysql.createConnection({
@@ -280,6 +305,53 @@ async function fetchAddresses() {
         console.error('Error connecting to database:', error);
     }
 }
+
+// Type
+async function fetchTypes() {
+    try {
+        const connection = await mysql.createConnection({
+            host: 'localhost',
+            user: 'root',
+            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
+            database: 'card_shop_db'
+        });
+        console.log('Connected to database');
+
+        // Execute query to fetch all types
+        const [result] = await connection.execute('SELECT * FROM `type`');
+
+        // Close Connection
+        await connection.end();
+
+        return result;
+    } catch (error) {
+        console.error('Error connecting to database:', error);
+    }
+}
+
+// Rarity
+async function fetchRarities() {
+    try {
+        const connection = await mysql.createConnection({
+            host: 'localhost',
+            user: 'root',
+            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
+            database: 'card_shop_db'
+        });
+        console.log('Connected to database');
+
+        // Execute query to fetch all rarities
+        const [result] = await connection.execute('SELECT * FROM `rarity`');
+
+        // Close connection
+        await connection.end();
+
+        return result;
+    } catch (error) {
+        console.error('Error connecting to database:', error);
+    }
+}
+
 module.exports = {
     fetchCustomers,
     fetchSingleCustomer,
@@ -287,9 +359,12 @@ module.exports = {
     updateCustomer,
     deleteCustomer,
     fetchCards,
+    fetchCardsByType,
     fetchSingleCard,
     addCard,
     updateCard,
     deleteCard,
     fetchAddresses,
+    fetchTypes,
+    fetchRarities
 }
