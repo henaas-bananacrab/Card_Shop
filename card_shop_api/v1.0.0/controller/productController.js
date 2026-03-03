@@ -3,7 +3,7 @@ const { fetchCards, fetchSingleCard, addCard, updateCard, deleteCard } = require
 async function cardMain() {
     const newCard = await addCard("Eevee", 3, 150, 7, 6);
     console.log(newCard);
-    const updatedCard = await updateCard(11, "Eevee", 8, 173, 7, 6);
+    const updatedCard = await updateCard(11, 8, 173);
     console.log(updatedCard);
     const deletedCard = await deleteCard(11);
     console.log(deletedCard);
