@@ -60,7 +60,7 @@ async function addCustomer(Username, First_name, Last_name, Email, password, Rol
             database: 'card_shop_db'
         });
         console.log('Connected to database');
-        
+
         // Execute query to insert a new address
         const [addressResult] = await connecting.execute(
             'INSERT INTO `address` (Address_id, Street_Address, Postal_code) VALUES (?, ?, ?)',
@@ -72,20 +72,20 @@ async function addCustomer(Username, First_name, Last_name, Email, password, Rol
 
         // Execute query to insert a new customer with the address ID
         const [result] = await connecting.execute(
-            'INSERT INTO `customer` (Customer_id, Username, First_name, Last_name, Email, password, Roles, Address_Address_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [null, Username, First_name, Last_name, Email, password, Roles, addressId]
+            'INSERT INTO `customer` (Username, First_name, Last_name, Email, password, Roles, Address_Address_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [ Username, First_name, Last_name, Email, password, Roles, addressId]
         );
 
         // Close connection
         await connecting.end();
 
-        return result, result2;
+        return result, addressResult;
     } catch (error) {
         console.error('Error connecting to database:', error);
     }
 }
 
-async function updateCustomer(Customer_id, First_name, Last_name, Email, password, Roles, Address_Address_id) {
+async function updateCustomer(Customer_id, Username, First_name, Last_name, Email, password, Roles, Address_Address_id) {
     try {
         const connecting = await mysql.createConnection({
             host: 'localhost',

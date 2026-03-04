@@ -1,8 +1,10 @@
+const bcyrpt = require('bcrypt');
+
 const { fetchCustomers, fetchSingleCustomer, addCustomer, updateCustomer, deleteCustomer } = require('../database/db');
 
 
 
-const allAccounts = async (req, res) => {
+const allUsers = async (req, res) => {
     try {
         const customers = await fetchCustomers();
 
@@ -12,7 +14,7 @@ const allAccounts = async (req, res) => {
     }
 }
 
-const singleAccount = async (req, res) => {
+const singleUser = async (req, res) => {
     try {
         const { Username } = await req.params;
         const customer = await fetchSingleCustomer(Username);
@@ -27,22 +29,32 @@ const singleAccount = async (req, res) => {
     }
 }
 
-const createAccount = async (req, res) => {
+const createUser = async (req, res) => {
     try {
-        const { Username, First_name, Last_name, Email, password, Roles, Street_Address, Postal_code } = await req.body;
-        const newCustomer = await addCustomer(Username, First_name, Last_name, Email, password, Roles, Street_Address, Postal_code);
+        const { Username, First_name, Last_name, Email, password, Roles, Street_Address, Postal_code } = req.body;
+        console.log("REQ BODY: ", req.body);
+
+        const hashedPassword = await bcyrpt.hash(password, 10);
+        console.log('hashedPassword:', hashedPassword);
+
+        const newCustomer = await addCustomer(Username, First_name, Last_name, Email, hashedPassword, Roles, Street_Address, Postal_code);
 
         res.status(201).json({success: true, data: newCustomer});
     } catch (error) {
         res.status(500).json({success: false, message: 'Error creating customer'});
+        console.log(error);
     }
 }
 
-const updateAccountInfo = async (req, res) => {
+const updateUserInfo = async (req, res) => {
     try {
-        const { Username } = await req.params;
-        const { First_name, Last_name, Email, password, Roles, Address_Address_id } = await req.body;
-        const updatedCustomer = await updateCustomer(Username, First_name, Last_name, Email, password, Roles, Address_Address_id);
+        const Customer_id = parseInt(req.params.id);
+        const { Username, First_name, Last_name, Email, password, Roles, Address_Address_id } = await req.body;
+
+        const hashedPassword = await bcyrpt.hash(password, 10);
+        console.log('hashedPassword:', hashedPassword);
+        
+        const updatedCustomer = await updateCustomer(Customer_id, Username, First_name, Last_name, Email, hashedPassword, Roles, Address_Address_id);
 
         if (updatedCustomer.affectedRows === 0) {
             res.status(404).json({success: false, message: 'Customer not found'});
@@ -54,10 +66,12 @@ const updateAccountInfo = async (req, res) => {
     }
 }
 
-const deleteAccountInfo = async (req, res) => {
+const deleteUserInfo = async (req, res) => {
     try {
-        const { Username } = await req.params;
-        const deletedCustomer = await deleteCustomer(Username);
+        const Customer_id = parseInt(req.params.id);
+        const deletedCustomer = await deleteCustomer(Customer_id);
+
+        res.json({ message: `Customer deleted successfully ${Customer_id}`, data: deletedCustomer });
 
         if (deletedCustomer.affectedRows === 0) {
             res.status(404).json({success: false, message: 'Customer not found'});
@@ -70,9 +84,9 @@ const deleteAccountInfo = async (req, res) => {
 }
 
 module.exports = {
-    allAccounts,
-    singleAccount,
-    createAccount,
-    updateAccountInfo,
-    deleteAccountInfo
+    allUsers,
+    singleUser,
+    createUser,
+    updateUserInfo,
+    deleteUserInfo
 }

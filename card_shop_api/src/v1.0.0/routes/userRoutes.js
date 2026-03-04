@@ -1,22 +1,22 @@
 const express = require('express');
 
-const { allAccounts, singleAccount, createAccount, updateAccountInfo, deleteAccountInfo } = require('../controller/userController');
+const { allUsers, singleUser, createUser, updateUserInfo, deleteUserInfo } = require('../controller/userController');
 
 const router = express.Router();
 
 //GET | www.localhost:3000/api/v1.0.0/accounts
-router.get('/accounts', allAccounts);
+router.get('/accounts', allUsers);
 
 //GET | www.localhost:3000/api/v1.0.0/accounts/:Username
-router.get('/accounts/:Username', singleAccount);
+router.get('/accounts/:Username', singleUser);
 
 //POST | www.localhost:3000/api/v1.0.0/accounts
-router.post('/accounts', createAccount);
+router.post('/accounts', createUser);
 
-//PUT | www.localhost:3000/api/v1.0.0/accounts/:Username
-router.put('/accounts/:Username', updateAccountInfo);
+//PUT | www.localhost:3000/api/v1.0.0/accounts/:id
+router.put('/accounts/:id', updateUserInfo);
 
-//DELETE | www.localhost:3000/api/v1.0.0/accounts/:Username
-router.delete('/accounts/:Username', deleteAccountInfo);
+//DELETE | www.localhost:3000/api/v1.0.0/accounts/:id
+router.delete('/accounts/:id', deleteUserInfo);
 
 module.exports = router;
