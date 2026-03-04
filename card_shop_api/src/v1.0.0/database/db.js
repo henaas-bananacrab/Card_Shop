@@ -1,14 +1,16 @@
 const mysql = require('mysql2/promise');
 
+const dbInfo = {
+    host: 'localhost',
+    user: 'root',
+    password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
+    database: 'card_shop_db'
+}
+
 // Customer functions
 async function fetchCustomers() {
     try {
-        const connection = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
-            database: 'card_shop_db'
-        });
+        const connection = await mysql.createConnection(dbInfo);
         console.log('Connected to database');
 
         // Execute query to fetch all customers
@@ -25,16 +27,16 @@ async function fetchCustomers() {
 
 async function fetchSingleCustomer(Username) {
     try {
-        const connection = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
-            database: 'card_shop_db'
-        });
+        const connection = await mysql.createConnection(dbInfo);
         console.log('Connected to database');
 
         // Execute query to fetch a single customer by username
         const [result] = await connection.execute('SELECT * FROM `customer` WHERE Username = ?', [Username]);
+
+        if (!result[0]) {
+            return null;
+        }
+        const user = result[0];
 
         // Execute query to fetch the address of the customer
         const [addressResult] = await connection.execute(
@@ -42,23 +44,23 @@ async function fetchSingleCustomer(Username) {
             [Username]
         );
 
+        if (addressResult[0]) {
+            user.address = addressResult[0];
+        }
+
         // Close connection
         await connection.end();
 
-        return { customer: result, address: addressResult };
+        return user;
     } catch (error) {
         console.error('Error connecting to database:', error);
+        return null;
     }
 }
 
 async function addCustomer(Username, First_name, Last_name, Email, password, Roles, Street_Address, Postal_code) {
     try {
-        const connecting = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
-            database: 'card_shop_db'
-        });
+        const connecting = await mysql.createConnection(dbInfo);
         console.log('Connected to database');
 
         // Execute query to insert a new address
@@ -87,12 +89,7 @@ async function addCustomer(Username, First_name, Last_name, Email, password, Rol
 
 async function updateCustomer(Customer_id, Username, First_name, Last_name, Email, password, Roles, Address_Address_id) {
     try {
-        const connecting = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
-            database: 'card_shop_db'
-        });
+        const connecting = await mysql.createConnection(dbInfo);
         console.log('Connected to database');
 
         // Execute query to update an existing customer
@@ -112,12 +109,7 @@ async function updateCustomer(Customer_id, Username, First_name, Last_name, Emai
 
 async function deleteCustomer(Customer_id) {
     try {
-        const connecting = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
-            database: 'card_shop_db'
-        });
+        const connecting = await mysql.createConnection(dbInfo);
         console.log('Connected to database');
 
         // Execute query to delete a customer
@@ -138,12 +130,7 @@ async function deleteCustomer(Customer_id) {
 // Card functions
 async function fetchCards() {
     try {
-        const connecting = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
-            database: 'card_shop_db'
-        })
+        const connecting = await mysql.createConnection(dbInfo)
         console.log('Connected to database');
 
         // Execute query to fetch all cards
@@ -160,12 +147,7 @@ async function fetchCards() {
 
 async function fetchCardsByType(Type_id) {
     try {
-        const connecting = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
-            database: 'card_shop_db'
-        })
+        const connecting = await mysql.createConnection(dbInfo);
         console.log('Connected to database');
 
         // Execute query to fetch all cards with the same type
@@ -185,12 +167,7 @@ async function fetchCardsByType(Type_id) {
 
 async function fetchSingleCard(Name) {
     try {
-        const connecting = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
-            database: 'card_shop_db'
-        })
+        const connecting = await mysql.createConnection(dbInfo)
         console.log('Connected to database');
 
         // Execute query to fetch a single card by name, including the Rarity_name and the Type_name
@@ -210,12 +187,7 @@ async function fetchSingleCard(Name) {
 
 async function addCard(Name, Quantity, Price, Type_Type_id, Rarity_Rarity_id) {
     try {
-        const connecting = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
-            database: 'card_shop_db'
-        });
+        const connecting = await mysql.createConnection(dbInfo);
         console.log('Connected to database');
 
         // Execute query to insert a new card
@@ -235,12 +207,7 @@ async function addCard(Name, Quantity, Price, Type_Type_id, Rarity_Rarity_id) {
 
 async function updateCard(Card_id, Quantity, Price) {
     try {
-        const connecting = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
-            database: 'card_shop_db'
-        });
+        const connecting = await mysql.createConnection(dbInfo);
         console.log('Connected to database');
 
         // Execute query to update an existing card
@@ -260,12 +227,7 @@ async function updateCard(Card_id, Quantity, Price) {
 
 async function deleteCard(Card_id) {
     try {
-        const connecting = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
-            database: 'card_shop_db'
-        });
+        const connecting = await mysql.createConnection(dbInfo);
         console.log('Connected to database');
 
         // Execute query to delete a card
@@ -286,12 +248,7 @@ async function deleteCard(Card_id) {
 // Address
 async function fetchAddresses() {
     try {
-        const connection = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
-            database: 'card_shop_db'
-        });
+        const connection = await mysql.createConnection(dbInfo);
         console.log('Connected to database');
 
         // Execute query to fetch all addresses
@@ -309,12 +266,7 @@ async function fetchAddresses() {
 // Type
 async function fetchTypes() {
     try {
-        const connection = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
-            database: 'card_shop_db'
-        });
+        const connection = await mysql.createConnection(dbInfo);
         console.log('Connected to database');
 
         // Execute query to fetch all types
@@ -332,12 +284,7 @@ async function fetchTypes() {
 // Rarity
 async function fetchRarities() {
     try {
-        const connection = await mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'jfkU_.,%¤#h734y38n(/T/JYGYTh',
-            database: 'card_shop_db'
-        });
+        const connection = await mysql.createConnection(dbInfo);
         console.log('Connected to database');
 
         // Execute query to fetch all rarities

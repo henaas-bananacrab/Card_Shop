@@ -11,6 +11,7 @@ const allUsers = async (req, res) => {
         res.status(200).json({success: true, data: customers});
     } catch (error) {
         res.status(500).json({success: false, message: 'Error fetching customers'});
+        console.log(error);
     }
 }
 
@@ -26,6 +27,7 @@ const singleUser = async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({success: false, message: 'Error fetching customer'});
+        console.log(error);
     }
 }
 
@@ -63,6 +65,7 @@ const updateUserInfo = async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({success: false, message: 'Error updating customer'});
+        console.log(error);
     }
 }
 
@@ -80,6 +83,7 @@ const deleteUserInfo = async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({success: false, message: 'Error deleting customer'});
+        console.log(error);
     }
 }
 
