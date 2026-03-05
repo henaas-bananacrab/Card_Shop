@@ -13,8 +13,8 @@ const allProducts = async (req, res) => {
 
 const productsByType = async (req, res) => {
     try {
-        const { Type_id } = await req.params;
-        const cards = await fetchCardsByType(Type_id);
+        const { Type_name } = await req.params;
+        const cards = await fetchCardsByType(Type_name);
 
         if (cards.length === 0) {
             res.status(404).json({success: false, message: 'Cards not found'});
@@ -107,5 +107,5 @@ module.exports = {
     stockSummary,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
 }

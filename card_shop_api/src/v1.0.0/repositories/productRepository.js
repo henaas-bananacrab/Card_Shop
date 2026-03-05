@@ -12,11 +12,11 @@ async function fetchCards() {
     }
 }
 
-async function fetchCardsByType(Type_id) {
+async function fetchCardsByType(Type_name) {
     try {
         const [result] = await dbInfo.execute(
-            'SELECT c.*, r.Rarity_name, t.Type_name FROM `card` c JOIN `rarity` r ON c.Rarity_Rarity_id = r.Rarity_id JOIN `type` t ON c.Type_Type_id = t.Type_id WHERE c.Type_Type_id = ?',
-            [Type_id]
+            'SELECT c.*, r.Rarity_name, t.Type_name FROM `card` c JOIN `rarity` r ON c.Rarity_Rarity_id = r.Rarity_id JOIN `type` t ON c.Type_Type_id = t.Type_id WHERE t.Type_name = ?',
+            [Type_name]
         );
 
         return result;
@@ -103,5 +103,5 @@ module.exports = {
     fetchStockSummary,
     addCard,
     updateCard,
-    deleteCard
+    deleteCard,
 };

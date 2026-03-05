@@ -8,8 +8,8 @@ const router = express.Router();
 //GET | www.localhost:3000/api/v1.0.0/products
 router.get('/products', allProducts);
 
-//GET | www.localhost:3000/api/v1.0.0/products/:Type
-router.get('/products/:Type', productsByType);
+//GET | www.localhost:3000/api/v1.0.0/products/:Type_name
+router.get('/products/:Type_name', productsByType);
 
 //GET | www.localhost:3000/api/v1.0.0/products/:Name
 router.get('/products/:Name', singleProduct);
