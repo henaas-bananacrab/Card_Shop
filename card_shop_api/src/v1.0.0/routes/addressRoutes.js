@@ -6,6 +6,6 @@ const { authenticateToken, authorizeRoles } = require('../middleware/authMiddlew
 const router = express.Router();
 
 //GET | www.localhost:3000/api/v1.0.0/addresses
-router.get('/addresses', authenticateToken, allAddresses);
+router.get('/addresses', authenticateToken, authorizeRoles(['administrator']), allAddresses);
 
 module.exports = router;
