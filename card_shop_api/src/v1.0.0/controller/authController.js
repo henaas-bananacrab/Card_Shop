@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const SECRET_KEY = 'your_secret_key';
-const { addCustomer, fetchSingleCustomer } = require('../database/db');
+const SECRET_KEY = process.env.JWT_SECRET;
+const { fetchSingleCustomer, addCustomer } = require('../repositories/userRepository');
 
 // registration controller
 const registration = async (req, res) => {
@@ -23,7 +23,7 @@ const registration = async (req, res) => {
 const login = async (req, res) => {
     const { Username, password } = req.body;
     try {
-        const user = await fetchSingleCustomer(Username, password);
+        const user = await fetchSingleCustomer(Username);
         console.log('password: ', password)
         console.log('user.password: ', user.password)
 

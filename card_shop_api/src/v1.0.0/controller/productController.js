@@ -1,4 +1,4 @@
-const { fetchCards, fetchSingleCard, addCard, updateCard, deleteCard } = require('../database/db');
+const { fetchCards, fetchCardsByType, fetchCardByName, addCard, updateCard, deleteCard } = require('../repositories/productRepository');
 
 const allProducts = async (req, res) => {
     try {
@@ -7,6 +7,7 @@ const allProducts = async (req, res) => {
         res.status(200).json({success: true, data: cards});
     } catch (error) {
         res.status(500).json({success: false, message: 'Error fetching cards'});
+        console.log(error);
     }
 }
 
@@ -22,6 +23,7 @@ const productsByType = async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({success: false, message: 'Error fetching cards'});
+        console.log(error);
     }
 }
 
@@ -29,7 +31,7 @@ const productsByType = async (req, res) => {
 const singleProduct = async (req, res) => {
     try {
         const { Name } = await req.params;
-        const card = await fetchSingleCard(Name);
+        const card = await fetchCardByName(Name);
 
         if (card.length === 0) {
             res.status(404).json({success: false, message: 'Card not found'});
@@ -38,6 +40,7 @@ const singleProduct = async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({success: false, message: 'Error fetching card'});
+        console.log(error);
     }
 }
 
@@ -49,6 +52,7 @@ const createProduct = async (req, res) => {
         res.status(201).json({success: true, data: newCard});
     } catch (error) {
         res.status(500).json({success: false, message: 'Error creating card'});
+        console.log(error);
     }
 }
 
@@ -65,6 +69,7 @@ const updateProduct = async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({success: false, message: 'Error updating card'});
+        console.log(error);
     }
 }
 
@@ -80,6 +85,7 @@ const deleteProduct = async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({success: false, message: 'Error deleting card'});
+        console.log(error);
     }
 }
 

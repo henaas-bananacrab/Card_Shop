@@ -1,6 +1,5 @@
 const bcyrpt = require('bcrypt');
-
-const { fetchCustomers, fetchSingleCustomer, addCustomer, updateCustomer, deleteCustomer } = require('../database/db');
+const { fetchCustomers, fetchSingleCustomer, addCustomer, updateCustomer, deleteCustomer } = require('../repositories/userRepository');
 
 
 
@@ -20,7 +19,7 @@ const singleUser = async (req, res) => {
         const { Username } = await req.params;
         const customer = await fetchSingleCustomer(Username);
 
-        if (customer.length === 0) {
+        if (!customer) {
             res.status(404).json({success: false, message: 'Customer not found'});
         } else {
             res.status(200).json({success: true, data: customer});
