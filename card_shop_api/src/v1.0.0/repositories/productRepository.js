@@ -95,6 +95,42 @@ async function deleteCard(Card_id) {
     }
 }
 
+async function searchCards(Name, minPrice, maxPrice) {
+    try {
+        // join with rarity and type so callers get the full card info
+        let query = `
+            SELECT c.*, r.Rarity_name, t.Type_name
+            FROM \`card\` c
+            JOIN \`rarity\` r ON c.Rarity_Rarity_id = r.Rarity_id
+            JOIN \`type\` t ON c.Type_Type_id = t.Type_id
+            WHERE 1=1
+        `;
+        const params = [];
+
+        if (Name) {
+            // partial match; make case insensitive
+            query += ' AND LOWER(c.Name) LIKE LOWER(?)';
+            params.push(`%${Name}%`);
+        }
+
+        if (minPrice) {
+            query += ' AND c.Price >= ?';
+            params.push(minPrice);
+        }
+
+        if (maxPrice) {
+            query += ' AND c.Price <= ?';
+            params.push(maxPrice);
+        }
+
+        const [results] = await dbInfo.execute(query, params);
+        return results;
+    } catch (error) {
+        console.error('Flexible search error:', error);
+        throw error;
+    }
+}
+
 
 module.exports = {
     fetchCards,
@@ -104,4 +140,5 @@ module.exports = {
     addCard,
     updateCard,
     deleteCard,
+    searchCards
 };

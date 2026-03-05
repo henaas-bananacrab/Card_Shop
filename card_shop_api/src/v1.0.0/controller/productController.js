@@ -1,4 +1,4 @@
-const { fetchCards, fetchCardsByType, fetchCardByName, fetchStockSummary, addCard, updateCard, deleteCard } = require('../repositories/productRepository');
+const { fetchCards, fetchCardsByType, fetchCardByName, fetchStockSummary, addCard, updateCard, deleteCard, searchCards } = require('../repositories/productRepository');
 
 const allProducts = async (req, res) => {
     try {
@@ -69,9 +69,9 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
     try {
-        const { Name } = await req.params;
+        const { Card_id } = await req.params;
         const { Quantity, Price } = await req.body;
-        const updatedCard = await updateCard(Name, Quantity, Price);
+        const updatedCard = await updateCard(Card_id, Quantity, Price);
 
         if (updatedCard.affectedRows === 0) {
             res.status(404).json({success: false, message: 'Card not found'});
@@ -86,8 +86,8 @@ const updateProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
     try {
-        const { Name } = await req.params;
-        const deletedCard = await deleteCard(Name);
+        const { Card_id } = await req.params;
+        const deletedCard = await deleteCard(Card_id);
 
         if (deletedCard.affectedRows === 0) {
             res.status(404).json({success: false, message: 'Card not found'});
@@ -100,6 +100,24 @@ const deleteProduct = async (req, res) => {
     }
 }
 
+const searchProducts = async (req, res) => {
+    try {
+        // search parameters come in via query string; support either 'name' or 'Name' for compatibility
+        const { name, Name, minPrice, maxPrice } = req.query;
+        const searchTerm = name || Name;
+        const data = await searchCards(searchTerm, minPrice, maxPrice);
+
+        if (!data || data.length === 0) {
+            return res.status(404).json({success: false, message: "No cards found matching those criteria."});
+        }
+
+        res.status(200).json({success: true, data});
+    } catch (err) {
+        console.error("Controller Error:", err);
+        res.status(500).json({success: false, error: "Internal Server Error"});
+    }
+};
+
 module.exports = {
     allProducts,
     productsByType,
@@ -108,4 +126,5 @@ module.exports = {
     createProduct,
     updateProduct,
     deleteProduct,
+    searchProducts
 }
