@@ -24,7 +24,6 @@ const login = async (req, res) => {
     const { Username, password } = req.body;
     try {
         const user = await fetchSingleCustomer(Username);
-        console.log('password: ', password)
         console.log('user.password: ', user.password)
 
         // Check if user exists and password is correct
