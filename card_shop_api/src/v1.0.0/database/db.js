@@ -9,7 +9,6 @@ const dbInfo = mysql.createPool({
     connectionLimit: 10,
     queueLimit: 0
 });
-console.log('Database info:', dbInfo);
 
 dbInfo.getConnection((err) => {
     if (err) {
