@@ -1,4 +1,4 @@
-const { fetchCards, fetchCardsByType, fetchCardByName, addCard, updateCard, deleteCard } = require('../repositories/productRepository');
+const { fetchCards, fetchCardsByType, fetchCardByName, fetchStockSummary, addCard, updateCard, deleteCard } = require('../repositories/productRepository');
 
 const allProducts = async (req, res) => {
     try {
@@ -40,6 +40,17 @@ const singleProduct = async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({success: false, message: 'Error fetching card'});
+        console.log(error);
+    }
+}
+
+const stockSummary = async (req, res) => {
+    try {
+        const summary = await fetchStockSummary();
+
+        res.status(200).json({success: true, data: summary});
+    } catch (error) {
+        res.status(500).json({success: false, message: 'Error fetching stock summary'});
         console.log(error);
     }
 }
@@ -93,6 +104,7 @@ module.exports = {
     allProducts,
     productsByType,
     singleProduct,
+    stockSummary,
     createProduct,
     updateProduct,
     deleteProduct

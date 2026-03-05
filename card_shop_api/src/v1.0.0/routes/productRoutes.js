@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { allProducts, productsByType, singleProduct, createProduct, updateProduct, deleteProduct } = require('../controller/productController');
+const { allProducts, productsByType, singleProduct, stockSummary, createProduct, updateProduct, deleteProduct } = require('../controller/productController');
 const { authenticateToken, authorizeRoles } = require('../middleware/authMiddleware');
 
 const router = express.Router();
@@ -13,6 +13,9 @@ router.get('/products/:Type', productsByType);
 
 //GET | www.localhost:3000/api/v1.0.0/products/:Name
 router.get('/products/:Name', singleProduct);
+
+//GET | www.localhost:3000/api/v1.0.0/products/stock
+router.get('/products/stock', authenticateToken, authorizeRoles(['administrator']), stockSummary);
 
 //POST | www.localhost:3000/api/v1.0.0/products
 router.post('/products', authenticateToken, authorizeRoles(['administrator']), createProduct);

@@ -4,7 +4,6 @@ const dbInfo = require('../database/db');
 async function fetchCards() {
     try {
         const [result] = await dbInfo.execute('SELECT * FROM `card`');
-        await dbInfo.end();
 
         return result;
     } catch (error) {
@@ -20,7 +19,6 @@ async function fetchCardsByType(Type_id) {
             [Type_id]
         );
 
-        await dbInfo.end();
         return result;
     } catch (error) {
         console.error('Error connecting to database:', error);
@@ -35,8 +33,20 @@ async function fetchCardByName(Name) {
             [Name]
         );
 
-        await dbInfo.end();
         return result;
+    } catch (error) {
+        console.error('Error connecting to database:', error);
+        throw error;
+    }
+}
+
+async function fetchStockSummary() {
+    try {
+        const [result] = await dbInfo.execute(
+            'SELECT SUM(Quantity) AS Total_Stock, SUM(Price * Quantity) AS Total_Value FROM `card`'
+        );
+
+        return result[0];
     } catch (error) {
         console.error('Error connecting to database:', error);
         throw error;
@@ -50,7 +60,6 @@ async function addCard(Name, Quantity, Price, Type_Type_id, Rarity_Rarity_id) {
             [null, Name, Quantity, Price, Type_Type_id, Rarity_Rarity_id]
         );
 
-        await dbInfo.end();
         return result;
     } catch (error) {
         console.error('Error connecting to database:', error);
@@ -65,7 +74,6 @@ async function updateCard(Card_id, Quantity, Price) {
             [Quantity, Price, Card_id]
         );
 
-        await dbInfo.end();
         return result;
     } catch (error) {
         console.error('Error connecting to database:', error);
@@ -80,7 +88,6 @@ async function deleteCard(Card_id) {
             [Card_id]
         );
 
-        await dbInfo.end();
         return result;
     } catch (error) {
         console.error('Error connecting to database:', error);
@@ -93,6 +100,7 @@ module.exports = {
     fetchCards,
     fetchCardsByType,
     fetchCardByName,
+    fetchStockSummary,
     addCard,
     updateCard,
     deleteCard
