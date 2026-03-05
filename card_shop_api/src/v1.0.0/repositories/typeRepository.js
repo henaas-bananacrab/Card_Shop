@@ -5,7 +5,6 @@ const dbInfo = require('../database/db');
 async function fetchTypes() {
     try {
         const [result] = await dbInfo.execute('SELECT * FROM `type`');
-        await dbInfo.end();
 
         return result;
     } catch (error) {

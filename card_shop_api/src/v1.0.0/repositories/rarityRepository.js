@@ -4,7 +4,6 @@ const dbInfo = require('../database/db');
 async function fetchRarities() {
     try {
         const [result] = await dbInfo.execute('SELECT * FROM `rarity`');
-        await dbInfo.end();
 
         return result;
     } catch (error) {
